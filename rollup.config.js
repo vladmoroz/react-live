@@ -8,45 +8,44 @@ import filesize from 'rollup-plugin-filesize';
 const plugins = [
   nodeResolve({
     jsnext: true,
-    modulesOnly: true
+    modulesOnly: true,
   }),
   commonjs({
     include: 'node_modules/**',
     namedExports: {
       'buble/dist/buble.deps': ['transform'],
       buble: ['transform'],
-      'prismjs/components/prism-core': ['highlight', 'languages']
-    }
+      'prismjs/components/prism-core': ['highlight', 'languages'],
+    },
   }),
   babel({
     babelrc: false,
-    presets: [['env', { modules: false, loose: true }], 'react'],
+    presets: [['@babel/env', { modules: false, loose: true }], '@babel/react'],
     plugins: [
-      'external-helpers',
-      'transform-object-rest-spread',
-      'transform-class-properties',
-      'transform-react-remove-prop-types'
-    ].filter(Boolean)
-  })
+      '@babel/plugin-proposal-object-rest-spread',
+      '@babel/plugin-proposal-class-properties',
+      'transform-react-remove-prop-types',
+    ].filter(Boolean),
+  }),
 ];
 
 const devPlugins = plugins.concat([
   replace({
-    'process.env.NODE_ENV': JSON.stringify('development')
-  })
+    'process.env.NODE_ENV': JSON.stringify('development'),
+  }),
 ]);
 
 const prodPlugins = plugins.concat([
   replace({
-    'process.env.NODE_ENV': JSON.stringify('production')
+    'process.env.NODE_ENV': JSON.stringify('production'),
   }),
   uglify(),
-  filesize()
+  filesize(),
 ]);
 
 const base = {
   input: 'src/index.js',
-  external: ['react', 'react-dom', 'prism-react-renderer', 'buble']
+  external: ['react', 'react-dom', 'prism-react-renderer', 'buble'],
 };
 
 const output = {
@@ -55,13 +54,13 @@ const output = {
     'prism-react-renderer': 'Prism',
     react: 'React',
     buble: 'Buble',
-    'react-dom': 'ReactDOM'
-  }
+    'react-dom': 'ReactDOM',
+  },
 };
 
-const makeOutput = config => Object.assign({}, output, config);
+const makeOutput = (config) => Object.assign({}, output, config);
 
-const withBase = config => Object.assign({}, base, config);
+const withBase = (config) => Object.assign({}, base, config);
 
 export default [
   {
@@ -69,27 +68,27 @@ export default [
       {
         name: 'ReactLive',
         file: 'dist/react-live.min.js',
-        format: 'umd'
-      }
+        format: 'umd',
+      },
     ].map(makeOutput),
-    plugins: prodPlugins
+    plugins: prodPlugins,
   },
   {
     output: [
       {
         name: 'ReactLive',
         file: 'dist/react-live.js',
-        format: 'umd'
+        format: 'umd',
       },
       {
         file: 'dist/react-live.es.js',
-        format: 'es'
+        format: 'es',
       },
       {
         file: 'dist/react-live.cjs.js',
-        format: 'cjs'
-      }
+        format: 'cjs',
+      },
     ].map(makeOutput),
-    plugins: devPlugins
-  }
+    plugins: devPlugins,
+  },
 ].map(withBase);
