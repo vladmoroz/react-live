@@ -1,11 +1,9 @@
 import {
   LiveProvider,
-  Editor,
-  LiveEditor,
   LiveError,
   LivePreview,
   LiveContext,
-  withLive
+  withLive,
 } from '../';
 import * as React from 'react';
 
@@ -16,22 +14,8 @@ export const providerC = (
     scope={{ Component: React.Component }}
     transformCode={(code: string): string => code + ';;'}
     noInline={false}
-    language="typescript"
-    theme={{
-      plain: {
-        fontWeight: '800',
-        color: 'salmon'
-      },
-      styles: []
-    }}
   />
 );
-
-export const editorC = (
-  <Editor onChange={(code: string) => {}} code="code" disabled={false} />
-);
-
-export const liveEditorC = <LiveEditor onChange={(code: string) => {}} />;
 
 export const liveErrorC = <LiveError />;
 

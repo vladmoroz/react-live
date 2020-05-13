@@ -2,17 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, boolean } from '@storybook/addon-knobs/react';
-import { theme } from '../src/constants/theme';
 
-import {
-  LiveProvider,
-  LiveEditor,
-  LiveError,
-  LivePreview,
-  withLive
-} from '../src/index';
+import { LiveProvider, LiveError, LivePreview, withLive } from '../src/index';
 
-const code = `
+const defaultExample = `
 <strong>
   Hello World!
     Next Indent Level
@@ -62,9 +55,9 @@ function LikeButton() {
 
   return (
     <>
-      <p class="likes">{likes} likes</p>
+      <p className="likes">{likes} likes</p>
       <button
-        class="button"
+        className="button"
         onClick={() => increaseLikes(likes + 1)} />
     </>
   )
@@ -76,12 +69,9 @@ const StyledLivePreview = styled(LivePreview)`
   color: white;
   padding: 3px;
 `;
-const StyledEditor = styled(LiveEditor)`
-  background: #46424f;
-`;
 const StyledTextarea = styled.textarea`
   height: 300px;
-  width: 600px;
+  width: 100%;
   font-family: monospace;
   font-size: 16px;
   white-space: pre;
@@ -138,24 +128,10 @@ const TestComponent = ({ live }) => {
   const Result = live.element;
   return (
     <Container>
-      <StyledEditor />
-      <Result />
+      <pre>{live.code}</pre>
       <pre>{live.error}</pre>
+      <Result />
     </Container>
-  );
-};
-const CustomEditor = () => {
-  // eslint-disable-next-line no-shadow
-  const [code, updateCode] = React.useState(functionExample);
-  const handleChange = e => {
-    updateCode(e.target.value);
-  };
-  return (
-    <LiveProvider code={code}>
-      <StyledTextarea onChange={handleChange} value={code} />
-      <LivePreview />
-      <LiveError />
-    </LiveProvider>
   );
 };
 const LiveComponent = withLive(TestComponent);
@@ -163,15 +139,17 @@ function Sandbox() {
   const initialCode = `
     <em>We're using a custom onChange event on the editor to update the code</em>
   `.trim();
-  const [customCode, setCustomCode] = React.useState(initialCode);
+  const [code, setCode] = React.useState(initialCode);
   return (
     <LiveProvider
-      code={customCode}
+      code={code}
       disabled={boolean('Disable editing', false)}
-      language="jsx"
       noInline={boolean('No inline evaluation', false)}
     >
-      <StyledEditor onChange={setCustomCode} />
+      <StyledTextarea
+        onChange={(event) => setCode(event.target.value)}
+        defaultValue={code}
+      />
       <LiveError />
       <LivePreview />
     </LiveProvider>
@@ -179,68 +157,79 @@ function Sandbox() {
 }
 storiesOf('Live', module)
   .addDecorator(withKnobs)
-  .add('default', () => (
-    <LiveProvider
-      code={code}
-      disabled={boolean('Disable editing', false)}
-      noInline={boolean('No inline evaluation', false)}
-    >
-      <LiveEditor />
-      <LiveError />
-      <LivePreview />
-    </LiveProvider>
-  ))
-  .add('function example', () => (
-    <LiveProvider
-      code={functionExample}
-      disabled={boolean('Disable editing', false)}
-      noInline={boolean('No inline evaluation', false)}
-    >
-      <LiveEditor />
-      <LiveError />
-      <StyledLivePreview />
-    </LiveProvider>
-  ))
-  .add('styled subcomponents', () => (
-    <LiveProvider
-      code={code}
-      disabled={boolean('Disable editing', false)}
-      noInline={boolean('No inline evaluation', false)}
-    >
-      <LiveEditor />
-      <LiveError />
-      <StyledLivePreview />
-    </LiveProvider>
-  ))
-  .add('component example', () => (
-    <LiveProvider
-      code={componentExample}
-      disabled={boolean('Disable editing', false)}
-      language="jsx"
-      noInline={boolean('No inline evaluation', false)}
-    >
-      <StyledEditor />
-      <LiveError />
-      <LivePreview />
-    </LiveProvider>
-  ))
-  .add('component with theme', () => (
-    <LiveProvider
-      code={componentExample}
-      disabled={boolean('Disable editing', false)}
-      language="jsx"
-      noInline={boolean('No inline evaluation', false)}
-      theme={theme}
-    >
-      <StyledEditor />
-      <LiveError />
-      <LivePreview />
-    </LiveProvider>
-  ))
+  .add('default', () => {
+    const [code, setCode] = React.useState(defaultExample);
+    return (
+      <LiveProvider
+        code={code}
+        disabled={boolean('Disable editing', false)}
+        noInline={boolean('No inline evaluation', false)}
+      >
+        <StyledTextarea
+          onChange={(event) => setCode(event.target.value)}
+          defaultValue={code}
+        />
+        <LiveError />
+        <LivePreview />
+      </LiveProvider>
+    );
+  })
+  .add('function example', () => {
+    const [code, setCode] = React.useState(functionExample);
+    return (
+      <LiveProvider
+        code={code}
+        disabled={boolean('Disable editing', false)}
+        noInline={boolean('No inline evaluation', false)}
+      >
+        <StyledTextarea
+          onChange={(event) => setCode(event.target.value)}
+          defaultValue={code}
+        />
+        <LiveError />
+        <StyledLivePreview />
+      </LiveProvider>
+    );
+  })
+  .add('styled subcomponents', () => {
+    const [code, setCode] = React.useState(defaultExample);
+    return (
+      <LiveProvider
+        code={code}
+        disabled={boolean('Disable editing', false)}
+        noInline={boolean('No inline evaluation', false)}
+      >
+        <StyledTextarea
+          onChange={(event) => setCode(event.target.value)}
+          defaultValue={code}
+        />
+        <LiveError />
+        <StyledLivePreview />
+      </LiveProvider>
+    );
+  })
+  .add('component example', () => {
+    const [code, setCode] = React.useState(componentExample);
+    return (
+      <LiveProvider
+        code={code}
+        disabled={boolean('Disable editing', false)}
+        noInline={boolean('No inline evaluation', false)}
+      >
+        <StyledTextarea
+          onChange={(event) => setCode(event.target.value)}
+          defaultValue={code}
+        />
+        <LiveError />
+        <LivePreview />
+      </LiveProvider>
+    );
+  })
   .add('component with custom onChange', () => <Sandbox />)
-  .add('withLive example', () => (
-    <LiveProvider code={hooksExample}>
-      <LiveComponent />
-    </LiveProvider>
-  ))
-  .add('with custom editor', () => <CustomEditor />);
+  .add('withLive example', () => {
+    return (
+      <LiveProvider code={hooksExample}>
+        <LiveComponent />
+      </LiveProvider>
+    );
+  });

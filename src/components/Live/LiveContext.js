@@ -1,5 +1,5 @@
-import createContext from 'create-react-context';
+import * as React from 'react';
 
-const LiveContext = createContext({});
+const LiveContext = React.createContext({});
 
 export default LiveContext;

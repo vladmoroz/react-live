@@ -8,19 +8,16 @@ export default class LiveProvider extends Component {
   static defaultProps = {
     code: '',
     noInline: false,
-    language: 'jsx',
-    disabled: false
+    disabled: false,
   };
 
   static propTypes = {
-    children: PropTypes.children,
+    children: PropTypes.node,
     code: PropTypes.string,
     disabled: PropTypes.bool,
-    language: PropTypes.string,
     noInline: PropTypes.bool,
     scope: PropTypes.object,
-    theme: PropTypes.object,
-    transformCode: PropTypes.node
+    transformCode: PropTypes.node,
   };
 
   // eslint-disable-next-line camelcase
@@ -34,7 +31,7 @@ export default class LiveProvider extends Component {
     code: prevCode,
     scope: prevScope,
     noInline: prevNoInline,
-    transformCode: prevTransformCode
+    transformCode: prevTransformCode,
   }) {
     const { code, scope, noInline, transformCode } = this.props;
     if (
@@ -47,12 +44,12 @@ export default class LiveProvider extends Component {
     }
   }
 
-  onChange = code => {
+  onChange = (code) => {
     const { scope, transformCode, noInline } = this.props;
     this.transpile({ code, scope, transformCode, noInline });
   };
 
-  onError = error => {
+  onError = (error) => {
     this.setState({ error: error.toString() });
   };
 
@@ -60,12 +57,12 @@ export default class LiveProvider extends Component {
     // Transpilation arguments
     const input = {
       code: transformCode ? transformCode(code) : code,
-      scope
+      scope,
     };
 
-    const errorCallback = err =>
+    const errorCallback = (err) =>
       this.setState({ element: undefined, error: err.toString() });
-    const renderElement = element => this.setState({ ...state, element });
+    const renderElement = (element) => this.setState({ ...state, element });
 
     // State reset object
     const state = { unsafeWrapperError: undefined, error: undefined };
@@ -83,18 +80,16 @@ export default class LiveProvider extends Component {
   };
 
   render() {
-    const { children, code, language, theme, disabled } = this.props;
+    const { children, code, disabled } = this.props;
 
     return (
       <LiveContext.Provider
         value={{
           ...this.state,
           code,
-          language,
-          theme,
           disabled,
           onError: this.onError,
-          onChange: this.onChange
+          onChange: this.onChange,
         }}
       >
         {children}

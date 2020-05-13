@@ -13,9 +13,7 @@ const plugins = [
   commonjs({
     include: 'node_modules/**',
     namedExports: {
-      'buble/dist/buble.deps': ['transform'],
-      buble: ['transform'],
-      'prismjs/components/prism-core': ['highlight', 'languages'],
+      sucrase: ['transform'],
     },
   }),
   babel({
@@ -45,15 +43,14 @@ const prodPlugins = plugins.concat([
 
 const base = {
   input: 'src/index.js',
-  external: ['react', 'react-dom', 'prism-react-renderer', 'buble'],
+  external: ['react', 'react-dom', 'sucrase'],
 };
 
 const output = {
   exports: 'named',
   globals: {
-    'prism-react-renderer': 'Prism',
     react: 'React',
-    buble: 'Buble',
+    sucrase: 'sucrase',
     'react-dom': 'ReactDOM',
   },
 };
