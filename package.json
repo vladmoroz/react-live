@@ -1,6 +1,6 @@
 {
-  "name": "react-live",
-  "version": "2.2.2",
+  "name": "@vladmoroz/react-live",
+  "version": "1.0.0",
   "description": "A production-focused playground for live editing React code",
   "main": "dist/react-live.cjs.js",
   "typings": "./typings/react-live.d.ts",
@@ -68,13 +68,13 @@
     "react-live.css",
     "typings/react-live.d.ts"
   ],
-  "author": "Phil Plückthun <phil@plckthn.me> (https://github.com/philpl)",
+  "author": "Phil Plückthun <phil@plckthn.me> (https://github.com/philpl), Vlad Moroz <vlad@modulz.app> (https://github.com/vladmoroz)",
   "bugs": {
-    "url": "https://github.com/philpl/react-live/issues"
+    "url": "https://github.com/modulz/react-live/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/philpl/react-live.git"
+    "url": "git+https://github.com/modulz/react-live.git"
   },
   "engines": {
     "npm": ">= 2.0.0",
